@@ -1,7 +1,7 @@
 let fs = require('fs');//переменная fs-работа с файловой системой
 let arg = process.argv;//объект для работы с элементами ком строки
 let inText;
-let stroka='abbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+let stroka=fs.readFileSync('first.txt').toString();
 let k=0;
 function node(letter,freq,used,father,code){
     this.letter=letter;
@@ -38,35 +38,7 @@ for (let j=0;j<tree.length;j++){
         premin=tree[j].freq;
         ind2=j
     }
-    /*
-    if (maxim<tree[j].freq2){
-        maxim=tree[j].freq2
-        ind3=j;
-    }*/
 }
-// кодировка листьев в зависимости от их частоты
-/*tree[ind3].code='0';
-tree[ind3].freq2=0;
-maxim=0;
-for (let i=0;i<tree.length-1;i++){
-    for (let k=0;k<tree.length;k++){
-        if (maxim<tree[k].freq2){
-            maxim=tree[k].freq2;
-            ind3=k;
-        }
-    }
-    for (j=0;j<i+1;j++){
-        tree[ind3].code+='1'
-    }
-    tree[ind3].code+='0';
-    tree[ind3].freq2=0;
-    maxim=0;
-}
-tree[ind3].code='';
-for (j=0;j<tree.length-1;j++){
-    tree[ind3].code+='1';
-}
-*/
 // слияние двух минимумов
 if (premin!=0) {
     n = new node(tree[ind2].letter + tree[ind].letter, tree[ind].freq + tree[ind2].freq, true, 1, '');
@@ -103,7 +75,6 @@ if (premin!=0) {
             if (i < 1) {
                 if (tree[tree.length - 1].letter[i] == tree[k].letter) {
                     tree[k].code += '0';
-                    console.log(tree[k].letter, 1, k);
                     break
                 }
             } else if (i >= 1) {
@@ -118,7 +89,6 @@ if (premin!=0) {
                     } else {
                         tree[k].code += '0'
                     }
-                    console.log(tree[k].letter, 2, k);
                     break
                 }
             }
@@ -128,7 +98,33 @@ if (premin!=0) {
 else{
     tree[0].code='0'
 }
-console.log(tree)
+let stroka2="";
+for (i=0;i<stroka.length;i++){
+    for (j=0;j<tree.length;j++){
+        if (stroka[i]==tree[j].letter){
+            stroka2+=tree[j].code+' ';
+            break
+        }
+    }
+}
+fs.writeFileSync('second.txt', stroka2);
+//раскодировка
+let output=""
+let stroka3=fs.readFileSync('second.txt').toString();
+for (i=0;i<stroka2.length;){
+    let t="";
+    while (stroka2[i]!=' '){
+        t+=stroka2[i];
+        i++;
+    }
+    for (j=0;j<tree.length;j++){
+        if (t==tree[j].code){
+            output+=tree[j].letter;
+        }
+    }
+    i++;
+}
+fs.writeFileSync('third.txt', output);
 
 
 
